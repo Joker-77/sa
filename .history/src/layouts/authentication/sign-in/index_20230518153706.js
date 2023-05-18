@@ -18,7 +18,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, Redirect } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";

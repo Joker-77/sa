@@ -18,7 +18,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -49,10 +49,7 @@ function Basic() {
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const userDetails = useAuthState();
-  console.log(userDetails);
-
-  if (userDetails.isLoggedIn) return <Navigate to="/Dashboard" />;
-
+console
   return (
     <BasicLayout image={bgImage}>
       <Card>

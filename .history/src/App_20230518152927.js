@@ -107,7 +107,7 @@ export default function App() {
             exact
             path={route.route}
             element={
-              route.isPrivate && !userDetails.isLoggedIn ? (
+              route.is!userDetails.isLoggedIn ? (
                 <Navigate replace to={"/authentication/sign-in"} />
               ) : (
                 route.component

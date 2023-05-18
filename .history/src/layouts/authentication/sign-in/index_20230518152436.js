@@ -18,7 +18,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -42,16 +42,12 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import { useAuthState } from "context/Auth";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const userDetails = useAuthState();
-  console.log(userDetails);
-
-  if (userDetails.isLoggedIn) return <Navigate to="/Dashboard" />;
 
   return (
     <BasicLayout image={bgImage}>

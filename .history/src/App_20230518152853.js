@@ -101,13 +101,15 @@ export default function App() {
       if (route.collapse) {
         return getRoutes(route.collapse);
       }
+
       if (route.route) {
+        console.log(userD)
         return (
           <Route
             exact
             path={route.route}
             element={
-              route.isPrivate && !userDetails.isLoggedIn ? (
+              !userDetails.isLoggedIn ? (
                 <Navigate replace to={"/authentication/sign-in"} />
               ) : (
                 route.component

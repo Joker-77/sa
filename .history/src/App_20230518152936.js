@@ -102,6 +102,7 @@ export default function App() {
         return getRoutes(route.collapse);
       }
       if (route.route) {
+        console.log(userDetails);
         return (
           <Route
             exact
