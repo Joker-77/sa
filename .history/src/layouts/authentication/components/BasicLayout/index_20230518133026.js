@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -19,14 +18,14 @@ function BasicLayout({ image, children }) {
   return (
     <PageLayout>
       {
-        //   <DefaultNavbar
-        //   action={{
-        //     type: "external",
-        //     route: "https://creative-tim.com/product/material-dashboard-react",
-        //     label: "free download",
-        //     color: "dark",
-        //   }}
-        // />
+        <DefaultNavbar
+        action={{
+          type: "external",
+          route: "https://creative-tim.com/product/material-dashboard-react",
+          label: "free download",
+          color: "dark",
+        }}
+      />
       }
       <MDBox
         position="absolute"
@@ -51,9 +50,7 @@ function BasicLayout({ image, children }) {
           </Grid>
         </Grid>
       </MDBox>
-      {
-        // <Footer light />
-      }
+      <Footer light />
     </PageLayout>
   );
 }

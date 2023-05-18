@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -51,9 +50,7 @@ function BasicLayout({ image, children }) {
           </Grid>
         </Grid>
       </MDBox>
-      {
-        // <Footer light />
-      }
+      <Footer light />
     </PageLayout>
   );
 }

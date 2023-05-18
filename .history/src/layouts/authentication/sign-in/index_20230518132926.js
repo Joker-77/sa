@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/self-closing-comp */
 /**
 =========================================================
 * Material Dashboard 2 React - v2.1.0

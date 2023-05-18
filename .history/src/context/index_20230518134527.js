@@ -78,6 +78,7 @@ function useMaterialUIController() {
       "useMaterialUIController should be used inside the MaterialUIControllerProvider."
     );
   }
+
   return context;
 }
 
