@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useMemo, useEffect, useState } from "react";
 
 // prop-types is a library for typechecking of props
@@ -39,14 +40,12 @@ function DataTable({
     : ["5", "10", "15", "20", "25"];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
-
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -152,7 +151,7 @@ function DataTable({
               </MDTypography>
             </MDBox>
           )}
-          {canSearch && (
+          {/* {canSearch && (
             <MDBox width="12rem" ml="auto">
               <MDInput
                 placeholder="Search..."
@@ -165,7 +164,7 @@ function DataTable({
                 }}
               />
             </MDBox>
-          )}
+          )} */}
         </MDBox>
       ) : null}
       <Table {...getTableProps()}>

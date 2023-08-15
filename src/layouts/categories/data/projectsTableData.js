@@ -61,7 +61,6 @@ export default function data() {
       { Header: "completion", accessor: "completion", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],
-
     rows: [
       {
         project: <Project image={LogoAsana} name="Asana" />,

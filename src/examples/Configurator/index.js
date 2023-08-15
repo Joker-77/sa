@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/self-closing-comp */
+/* eslint-disable */
 import { useState, useEffect } from "react";
 
 // react-github-btn
@@ -33,6 +34,7 @@ import {
   setFixedNavbar,
   setSidenavColor,
   setDarkMode,
+  setDirection,
 } from "context";
 
 function Configurator() {
@@ -44,6 +46,7 @@ function Configurator() {
     transparentSidenav,
     whiteSidenav,
     darkMode,
+    direction,
   } = controller;
   const [disabled, setDisabled] = useState(false);
   const sidenavColors = ["primary", "dark", "info", "success", "warning", "error"];
@@ -80,6 +83,8 @@ function Configurator() {
   };
   const handleFixedNavbar = () => setFixedNavbar(dispatch, !fixedNavbar);
   const handleDarkMode = () => setDarkMode(dispatch, !darkMode);
+  const handleArabic = () => setDirection(dispatch, "rtl");
+  const handleEnglish = () => setDirection(dispatch, "ltr");
 
   // sidenav type buttons styles
   const sidenavTypeButtonsStyles = ({
@@ -260,10 +265,53 @@ function Configurator() {
         <Divider />
         <MDBox display="flex" justifyContent="space-between" alignItems="center" lineHeight={1}>
           <MDTypography variant="h6">Light / Dark</MDTypography>
-
           <Switch checked={darkMode} onChange={handleDarkMode} />
         </MDBox>
         <Divider />
+        <MDBox mt={3} lineHeight={1}>
+          <MDTypography variant="h6">اللغة</MDTypography>
+          <MDTypography variant="button" color="text">
+            اختر اللغة
+          </MDTypography>
+          <MDBox
+            sx={{
+              display: "flex",
+              mt: 2,
+              mr: 1,
+            }}
+          >
+            <MDButton
+              color="dark"
+              variant="gradient"
+              onClick={handleArabic}
+              disabled={disabled}
+              fullWidth
+              sx={
+                direction == "rtl"
+                  ? sidenavTypeActiveButtonStyles
+                  : sidenavTypeButtonsStyles
+              }
+            >
+               العربية
+            </MDButton>
+            <MDBox sx={{ mx: 1, width: "8rem", minWidth: "8rem" }}>
+              <MDButton
+                color="dark"
+                variant="gradient"
+                onClick={handleEnglish}
+                disabled={disabled}
+                fullWidth
+                sx={
+                  direction == "ltr"
+                    ? sidenavTypeActiveButtonStyles
+                    : sidenavTypeButtonsStyles
+                }
+              >
+                English
+              </MDButton>
+            </MDBox>
+          </MDBox>
+        </MDBox>
       </MDBox>
     </ConfiguratorRoot>
   );

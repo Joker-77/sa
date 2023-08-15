@@ -1,26 +1,29 @@
-/* eslint-disable import/no-named-as-default-member */
-/* eslint-disable prefer-const */
-/* eslint-disable import/no-named-as-default */
-/* eslint-disable class-methods-use-this */
+/* eslint-disable */
 import api from "./Api";
 import TokenService from "./TokenService";
 
 class AuthService {
-  login(username, password) {
+  login(payload) {
+    console.log("auth", payload);
     return api
-      .post("/authentication/login", {
-        username,
-        password,
+      .post("/login", payload, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       .then((response) => {
         if (response && response.data) {
+          console.log(response.data);
+          let resp = response.data.data;
           let user = {
-            access: response.data.access,
-            refresh: response.data.refresh,
+            user: resp.user,
+            access: resp.token,
           };
-          TokenService.setUser(user);
+          TokenService.setcurrentUser(user);
+          console.clear()
+          console.log(user)
+          return user;
         }
-        return response.data;
       });
   }
 

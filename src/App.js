@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-curly-brace-presence */
+/* eslint-disable */
 import { useState, useEffect, useMemo } from "react";
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -27,6 +27,7 @@ import themeDarkRTL from "assets/theme-dark/theme-rtl";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Material Dashboard 2 React routes
 import routes from "routes";
@@ -95,7 +96,6 @@ export default function App() {
   }, [pathname]);
 
   const userDetails = useAuthState();
-
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {

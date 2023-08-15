@@ -12,7 +12,7 @@ let token = localStorage.getItem("currentUser")
 export const initialState = {
   userDetails: "" || user,
   token: "" || token,
-  isLoggedIn: false,
+  isLoggedIn: true,
   loading: false,
   errorMessage: null,
 };
@@ -28,7 +28,7 @@ export const AuthReducer = (initialState, action) => {
       return {
         ...initialState,
         user: action.payload.user,
-        token: action.payload.access,
+        token: action.payload.auth_token,
         isLoggedIn: true,
         loading: false,
       };
@@ -46,6 +46,7 @@ export const AuthReducer = (initialState, action) => {
         loading: false,
         errorMessage: action.error,
       };
+
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }

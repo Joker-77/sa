@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable */
 import { useEffect } from "react";
 
 // react-router-dom components
@@ -34,7 +35,7 @@ import {
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
+  const { direction, miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
 
@@ -69,10 +70,10 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
+  const renderRoutes = routes.map(({ type, name, ar_name, icon, title, noCollapse, key, href, route }) => {
     let returnValue;
 
-    if (type === "collapse") {
+    if (type === "collapse" && key !== 'sign-in') {
       returnValue = href ? (
         <Link
           href={href}
@@ -82,7 +83,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           sx={{ textDecoration: "none" }}
         >
           <SidenavCollapse
-            name={name}
+            name={direction == "ltr" ? name : ar_name}
             icon={icon}
             active={key === collapseName}
             noCollapse={noCollapse}
@@ -90,7 +91,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </Link>
       ) : (
         <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          <SidenavCollapse name={direction == "ltr" ? name : ar_name} icon={icon} active={key === collapseName} />
         </NavLink>
       );
     } else if (type === "title") {
@@ -121,7 +122,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         />
       );
     }
-
     return returnValue;
   });
 

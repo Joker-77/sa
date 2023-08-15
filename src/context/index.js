@@ -97,7 +97,8 @@ const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGUR
 const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
 const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
-
+// const loggingIn = (dispatch, value) => dispatch({ type: "REQUEST_LOGIN" });
+// const logIn = (dispatch, value) => dispatch({ type: "LOGIN_SUCCESS", value });
 export {
   MaterialUIControllerProvider,
   useMaterialUIController,
