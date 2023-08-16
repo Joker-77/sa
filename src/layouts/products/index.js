@@ -126,7 +126,7 @@ function Products() {
                     {direction == 'rtl' ? "إتلاف" : "Damage"}
                   </MDButton>
                   <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
-                    {direction == 'rtl' ? "حذف" : "Edit"}
+                    {direction == 'rtl' ? "حذف" : "Delete"}
                   </MDButton> </>
       },
       width: 50,
@@ -194,9 +194,11 @@ function Products() {
         </DialogTitle>
         <DialogActions>
           <MDButton  color="primary" onClick={handleAction} autoFocus>
-            نعم
+          { direction == "ltr" ? "Yes" : "نعم" }
           </MDButton>
-          <MDButton color="red" onClick={handleClose}>لا</MDButton>
+          <MDButton color="red" onClick={handleClose}>
+          { direction == "ltr" ? "No" : "لا" }
+          </MDButton>
         </DialogActions>
       </Dialog>
   }

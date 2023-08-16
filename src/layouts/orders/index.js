@@ -15,27 +15,37 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import {
   useMaterialUIController,
+  setOpenConfigurator,
+  setTransparentSidenav,
+  setWhiteSidenav,
+  setFixedNavbar,
+  setSidenavColor,
+  setDarkMode,
+  setDirection,
 } from "context";
 import { useEffect, useState } from "react";
+import OrdersService from "services/OrdersService";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
-import { CreateCoupon } from "./createCoupon";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import CouponsService from "services/CouponsService"
 import { toast } from 'react-toastify';
-import UsersService from "services/UsersService";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
+import { TextField, MenuItem } from "@mui/material";
 
-function Coupons() {
-  const [products, setCoupons] = useState([]);
+function Orders() {
+  const [orders, setOrders] = useState([]);
   const [rows, setFiltered] = useState([]);
   const [controller, dispatch] = useMaterialUIController();
   const {
+    openConfigurator,
+    fixedNavbar,
+    sidenavColor,
+    transparentSidenav,
+    whiteSidenav,
+    darkMode,
     direction,
   } = controller;
   const backendUrl = "https://back.trendfuture.shop";
@@ -49,35 +59,60 @@ function Coupons() {
       dataKey: 'id',
     },
     {
-      Header:  direction == "ltr" ? "Code":"الكود",
+      Header:  direction == "ltr" ? "Customer Name":"اسم العميل",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.code}
+      {d.user?.name}
     </MDTypography> },
       width: 50,
-      dataKey: 'code',
+      dataKey: 'user',
     },
     {
-      Header: direction == "ltr" ? "Type" : "النوع",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.type}
+      Header: direction == "ltr" ? "Status" : "حالة الطلب",
+      accessor: (d) => { return  <MDTypography style={{ color: d.order_status.color }} display="block" variant="button" fontWeight="medium">
+      {d.order_status?.name}
     </MDTypography> },
       width: 50,
-      dataKey: 'type',
+      dataKey: 'order_status',
     },
     {
-      Header: direction == "ltr" ? "User Id" : "معرّف المستخدم",
+      Header: direction == "ltr" ? "Address" : "العنوان",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.user_id}
+      {d.address}
     </MDTypography> },
       width: 50,
-      dataKey: 'user_id',
+      dataKey: 'address',
+    },
+    {
+      Header: direction == "ltr" ? "Sub Total" : "المجموع الجزئي",
+      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
+      {d.sub_total}
+    </MDTypography> },
+      width: 50,
+      dataKey: 'sub_total',
+    },
+    {
+      Header: direction == "ltr" ? "Total" : "المجموع الكلي",
+      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
+      {d.total}
+    </MDTypography> },
+      width: 50,
+      dataKey: 'total',
+    },
+    {
+      Header: direction == "ltr" ? "Products Count" : "عدد العناصر",
+      accessor: (d) => 
+      { return  <MDTypography display="block" variant="button" fontWeight="medium">
+           {d.items?.length}
+      </MDTypography> },
+      width: 50,
+      dataKey: 'brand',
     },
     {
       Header: direction == "ltr" ? "Actions" : "إعدادات",
       accessor: (d) => 
       { 
-        return <>  <MDButton onClick={() => showCoupon(d)} style={{ margin: '0 5px 0 5px', backgroundColor: "lightblue" }}>
-                        {direction == 'rtl' ? "تعديل" : "Edit"}
+        return <>  <MDButton onClick={() => handleChangeStatus(d.id)} style={{ margin: '0 5px 0 5px', backgroundColor: "lightblue" }}>
+                        {direction == 'rtl' ? "تعديل حالة الطلب" : "Edit Status"}
                   </MDButton>  
                   <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
                     {direction == 'rtl' ? "حذف" : "Delete"}
@@ -86,35 +121,55 @@ function Coupons() {
       width: 50,
     }
   ];
-  const getCoupons = () => {
-    CouponsService.getAllCoupons()
+  const getOrders = () => {
+    OrdersService.getAllOrders()
     .then(resp => {
       console.log(resp)
       setFiltered(resp.data);
-      setCoupons(resp.data);
+      setOrders(resp.data);
     })
   }
   useEffect(() => {
-    getCoupons()
+    getOrders()
   }, [])
   // Damage Dialog
   const [open, setOpen] = React.useState(false);
+  const [del, setDelete] = React.useState(0);
   const [id, setId] = React.useState(0);
   const [message, setMessage] = React.useState("");
+  const [openStatus, setOpenStatus] = React.useState(false);
+  const [changeStatusMessage, setChangeStatusMessage] = React.useState("");
+  const ORDER_STATUS = [
+    { name: 'Pending', status: 'pending', serial: 1 },
+    { name: 'Preparation', status: 'preparation', serial: 2 },
+    { name: 'Delivery', status: 'delivery', serial: 3 },
+    { name: 'Delivered', status: 'delivered', serial: 4 },
+    { name: 'Rejected', status: 'rejected', serial: 5 },
+  ];
+  const [status, setStatus] = React.useState(ORDER_STATUS[0]);
   const handleClickOpen = (number, id) => {
+    setDelete(number)
     setId(id)
     setMessage("هل تريد حذف هذا العنصر؟")
     setOpen(true);
   };
 
+  const handleChangeStatus = (id) => {
+    setId(id);
+    direction == "rtl" ? setChangeStatusMessage("تغيير حالة الطلب") : setChangeStatusMessage("Change order status");
+    setOpenStatus(true)
+  }
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCloseStatus = () =>{
+    setOpenStatus(false);
+  }
   const handleAction = () => {
-      CouponsService.deleteCoupon(id)
+    OrdersService.deleteOrder(id)
       .then(resp => {
-        toast.success("Coupon deleted succesfully")
-        getCoupons()
+        toast.success("Order deleted succesfully")
+        getOrders()
         setOpen(false)
       })
       .catch(error => {
@@ -133,6 +188,82 @@ function Coupons() {
         </DialogTitle>
         <DialogActions>
           <MDButton  color="primary" onClick={handleAction} autoFocus>
+            نعم
+          </MDButton>
+          <MDButton color="red" onClick={handleClose}>لا</MDButton>
+        </DialogActions>
+      </Dialog>
+  }
+
+  const handleActionStatus = () => {
+    let st = ORDER_STATUS.filter(e => e.status == status)[0];
+    console.log(st);
+    let data = new FormData();
+    Object.keys(st).forEach((e) => {
+        data.append(e, st[e]);
+        console.log(e, st[e])
+    });
+    OrdersService.changeStatus(id, data)
+    .then(resp => {
+      toast.success(resp.data.message)
+    }).catch(error => { toast.error("An error occured")})
+  }
+  const ChangeStatus = (props) => {
+      return <Dialog
+          open={openStatus}
+          onClose={handleCloseStatus}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            { changeStatusMessage }
+          </DialogTitle>
+          <DialogContent>
+          <Grid item xs={12} md={10}>
+                  <TextField
+                      style={{ height: "3em" }}
+                      label={direction == "ltr" ? "Status" : "الحالة"}
+                      name="status"
+                      variant="outlined"
+                      margin="dense"
+                      value={status.status}
+                      fullWidth
+                      select
+                      onChange={(event) => setStatus(event.target.value)}
+                      onBlur={props.handleBlur}
+                      required
+                  >
+                      {ORDER_STATUS != null && ORDER_STATUS.map((cat) => (
+                          <MenuItem key={cat.status} value={cat.status}>
+                          {cat.name}
+                          </MenuItem>
+                      ))}
+                  </TextField>
+              </Grid>
+          </DialogContent>
+          <DialogActions>
+            <MDButton  color="primary" onClick={handleActionStatus} autoFocus>
+              { direction == "ltr" ? "Yes" : "نعم" }
+            </MDButton>
+            <MDButton color="red" onClick={handleClose}>
+            { direction == "ltr" ? "No" : "لا" }
+            </MDButton>
+          </DialogActions>
+        </Dialog>
+  }
+  // 
+  const ChangeStatusDialog = (props) => {
+    return <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          { changeStatusMessage }
+        </DialogTitle>
+        <DialogActions>
+          <MDButton  color="primary" onClick={handleAction} autoFocus>
           { direction == "ltr" ? "Yes" : "نعم" }
           </MDButton>
           <MDButton color="red" onClick={handleClose}>
@@ -141,9 +272,7 @@ function Coupons() {
         </DialogActions>
       </Dialog>
   }
-
   // custom pagination
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -169,7 +298,7 @@ function Coupons() {
     setSearch(value)
     if(!!value)
     {
-      let _searched = products.filter(e => e.en_name.toLowerCase().includes(value) 
+      let _searched = orders.filter(e => e.en_name.toLowerCase().includes(value) 
       || e.ar_name.toLowerCase().includes(value)
       || e.brand.toLowerCase().includes(value)
       || e.unit_price.toString().toLowerCase().includes(value)
@@ -178,35 +307,24 @@ function Coupons() {
       setFiltered(_searched)
     }
     else 
-    setFiltered(products)
+    setFiltered(orders)
   }, 100);
   //
   const [show, setShow] = useState(false);
   const [createNew, setCreate] = useState(false);
-  const [_coupons, setCoupon] = useState(null);
-  const showCoupon = (d) => {
+  const [_order, setOrder] = useState(null);
+  const showOrder = (d) => {
+    setShow(true);
+    setOrder(d);
     setCreate(false);
-    setShow(true);
-    setCoupon(d);
   }
-  const addNew = () => {
-    setCreate(true);
-    setShow(true);
-  } 
-  const back = () => {
-    setCreate(false)
-    setShow(false)
-    setCoupon(null)
-  }
-
-  
   return (
     <DashboardLayout>
       {
-        !show && <> <DashboardNavbar name={direction == 'rtl' ? "الكوبونات" : "Coupons"} />
-        <MDButton onClick={() => addNew()} color="primary">
-        {direction == 'rtl' ? "إضافة كوبون" : "Create Coupon"}
-        </MDButton>
+        !show && <> <DashboardNavbar name={direction == 'rtl' ? "الطلبات" : "Orders"} />
+        {/* <MDButton onClick={() => addNew()} color="primary">
+        {direction == 'rtl' ? "إضافة منتج" : "Create Order"}
+        </MDButton> */}
         <MDInput
           style={{ marginTop: "1em" }}
           placeholder={direction == 'rtl' ? "بحث" : "Search"}
@@ -232,12 +350,12 @@ function Coupons() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                  {direction == 'rtl' ? "جدول الكوبونات" : "Coupons Table"}
+                  {direction == 'rtl' ? "جدول الطلبات" : "Orders Table"}
                   </MDTypography>
                 </MDBox>
                 {rows != null && rows.length > 0 &&  
                  <DataTable
-                    type='coupons'
+                    type='orders'
                     table={{ columns, rows }}
                     isSorted={true}
                     entriesPerPage={true}
@@ -251,16 +369,10 @@ function Coupons() {
           </Grid>
         </MDBox> </>
       }
-      {
-        show && 
-        <>
-         <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل كوبون" : "Create or Edit Coupon"} />
-         <CreateCoupon isCreate={createNew} coupon={_coupons} backToPrevious={() => back()} />
-        </>
-      }
       <DamageDialog />
+      <ChangeStatus />
     </DashboardLayout>
   );
 }
 
-export default Coupons;
+export default Orders;

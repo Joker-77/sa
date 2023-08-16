@@ -11,6 +11,7 @@ import Stores from "layouts/stores";
 import Users from "layouts/users";
 import Coupons from "layouts/coupons";
 import Dashboard from "layouts/dashboard";
+import Orders from "layouts/orders";
 
 const routes = [
   {
@@ -81,6 +82,16 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/coupons",
     component: <Coupons />,
+    isPrivate: true,
+  },
+  {
+    type: "collapse",
+    name: "Orders",
+    ar_name: "الطلبات",
+    key: "orders",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/orders",
+    component: <Orders />,
     isPrivate: true,
   },
   {

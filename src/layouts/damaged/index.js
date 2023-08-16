@@ -183,9 +183,11 @@ function Damaged() {
         </DialogTitle>
         <DialogActions>
           <MDButton  color="primary" onClick={handleAction} autoFocus>
-            نعم
+          { direction == "ltr" ? "Yes" : "نعم" }
           </MDButton>
-          <MDButton color="red" onClick={handleClose}>لا</MDButton>
+          <MDButton color="red" onClick={handleClose}>
+          { direction == "ltr" ? "No" : "لا" }
+          </MDButton>
         </DialogActions>
       </Dialog>
   }
