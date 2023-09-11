@@ -1,6 +1,7 @@
+/* eslint-disable */
 import { useState, useEffect } from "react";
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, Navigate, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -36,14 +37,17 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
+import { logout } from "context/Auth";
+import { useAuthDispatch } from "context/Auth";
 
 function DashboardNavbar({ absolute, light, isMini, name }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
+  const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode, direction } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-
+  const authDispatch = useAuthDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -74,7 +78,10 @@ function DashboardNavbar({ absolute, light, isMini, name }) {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-
+  const logoutUser = async () => {
+    await logout(authDispatch);
+    navigate('/authentication/sign-in')
+  }
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -88,9 +95,7 @@ function DashboardNavbar({ absolute, light, isMini, name }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem onClick={logoutUser} icon={<Icon>logout</Icon>} title={direction == 'rtl' ? `تسجيل الخروج` : `logout`} />
     </Menu>
   );
 
@@ -121,11 +126,11 @@ function DashboardNavbar({ absolute, light, isMini, name }) {
               <MDInput label="ابحث هنا" />
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+              {/* <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
-              </Link>
+              </Link> */}
               <IconButton
                 size="small"
                 disableRipple
@@ -156,7 +161,7 @@ function DashboardNavbar({ absolute, light, isMini, name }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                <Icon sx={iconsStyle}>account_circle</Icon>
               </IconButton>
               {renderMenu()}
             </MDBox>

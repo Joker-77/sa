@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect, useMemo } from "react";
-import { TextField, Grid, MenuItem } from "@mui/material";
+import { TextField, Grid, MenuItem, Typography } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as yup from "yup"
 import MDButton from "components/MDButton";
@@ -9,7 +9,7 @@ import CouponsService from "services/CouponsService";
 import { toast } from 'react-toastify';
 import { ProductsService } from "services/ProductsService";
 import { StoresService } from "services/StoresService";
-export const CreateProduct = ({ product, isCreate, backToPrevious }) => 
+export const CreateProduct = ({ direction, product, isCreate, backToPrevious }) => 
 {
     console.clear()
     console.log(product)
@@ -94,12 +94,20 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
     const [store, setStore] = useState(null);
 
     const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedFile1, setSelectedFile1] = useState(null);
     const [file, setFile] = useState();
+    const [file1, setFile1] = useState();
     function handleChange(e) {
         setSelectedFile(e.target.files[0]);
         setFile(URL.createObjectURL(e.target.files[0]));
         imageStyle.display = 'inline-block';
         setStyle(imageStyle);
+      }
+      function handleChange1(e) {
+        setSelectedFile1(e.target.files[0]);
+        setFile1(URL.createObjectURL(e.target.files[0]));
+        imageStyle1.display = 'inline-block';
+        setStyle1(imageStyle1);
       }
       const handleSubmit = (values, props) => {
         if(selectedFile == null)
@@ -115,6 +123,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
         });
         if (colors.length > 0) data.append('color', JSON.stringify(colors));
         if (selectedFile) data.append('image', selectedFile);
+        if (selectedFile1) data.append('image_2', selectedFile1);
         if(isCreate)
         {
             ProductsService.addProduct(data).then(resp => { 
@@ -169,7 +178,11 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
     let imageStyle = {
         display: 'none',
       };
+      let imageStyle1 = {
+        display: 'none',
+      };
     const [style, setStyle] = useState(imageStyle);
+    const [style1, setStyle1] = useState(imageStyle1);
     return <React.Fragment>
                 <Formik
                 initialValues={initialValue}
@@ -184,7 +197,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="English Name"
+                            label={direction == "rtl" ? "الاسم بالإنكليزي" : "English Name"}
                             name="en_name"
                             variant="outlined"
                             margin="dense"
@@ -199,7 +212,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Arabic Name"
+                            label={direction == "rtl" ? "الاسم بالعربي" : "Arabic Name"}
                             name="ar_name"
                             variant="outlined"
                             margin="dense"
@@ -214,7 +227,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="English Description"
+                            label={direction == "rtl" ? "الوصف بالإنكليزي" : "English Description"}
                             name="en_description"
                             variant="outlined"
                             margin="dense"
@@ -229,7 +242,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Arabic Description"
+                            label={direction == "rtl" ? "الوصف بالعربي" : "Arabic Description"}
                             name="ar_description"
                             variant="outlined"
                             margin="dense"
@@ -244,7 +257,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                     <TextField
-                            label="Brand"
+                            label={direction == "rtl" ? "ماركة" : "Brand"}
                             name="brand"
                             variant="outlined"
                             margin="dense"
@@ -260,7 +273,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     <Grid item xs={12} md={3}>
                         <TextField
                             type="color"
-                            label="Color"
+                            label={direction == "rtl" ? "اللون" : "Color"}
                             variant="outlined"
                             margin="dense"
                             fullWidth
@@ -288,7 +301,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="($) Selling Price"
+                            label={direction == "rtl" ? "سعر المبيع ($)" : "($) Selling Price"}
                             name="selling_price"
                             variant="outlined"
                             margin="dense"
@@ -304,7 +317,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="($) Unit Price"
+                            label={direction == "rtl" ? "سعر الواحدة ($)" : "($) Unit Price"}
                             name="unit_price"
                             variant="outlined"
                             margin="dense"
@@ -320,7 +333,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Quantity"
+                            label={direction == "rtl" ? "الكمية" : "Quantity"}
                             name="entity"
                             variant="outlined"
                             margin="dense"
@@ -337,7 +350,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     <Grid item xs={12} md={10}>
                         <TextField
                             style={{ height: "3em" }}
-                            label="Category"
+                            label={direction == "rtl" ? "الصنف" : "Category"}
                             name="category_id"
                             variant="outlined"
                             margin="dense"
@@ -360,7 +373,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     <Grid item xs={12} md={10}>
                         <TextField
                             style={{ height: "3em" }}
-                            label="Store"
+                            label={direction == "rtl" ? "المخزن" : "Store"}
                             name="store_id"
                             variant="outlined"
                             margin="dense"
@@ -383,7 +396,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                     <Grid item xs={12} md={10}>
                         <TextField
                             style={{ height: "3em" }}
-                            label="Coupon"
+                            label={direction == "rtl" ? "الكوبون" : "Coupon"}
                             name="coupon_id"
                             variant="outlined"
                             margin="dense"
@@ -403,6 +416,9 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                         </TextField>
                     </Grid>
                 <Grid item xs={12} md={10}>
+                        <Typography variant="h6">
+                                {direction == "rtl" ? "الصورة الأولى" : "First Image"}
+                        </Typography>
                         <TextField
                         name="image"
                         type="file"
@@ -422,6 +438,29 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                             style={style}
                             />
                 </Grid>
+                <Grid item xs={12} md={10}>
+                      <Typography variant="h6">
+                              {direction == "rtl" ? "الصورة الثانية (AR)" : "Secondary Image (AR)"}
+                        </Typography>
+                        <TextField
+                        name="image_2"
+                        type="file"
+                        fullWidth
+                        variant="outlined"
+                        margin="dense"
+                        onChange={handleChange1}
+                        onBlur={props.handleBlur}
+                        required
+                        />
+                        <img
+                            alt="product-image"
+                            className="mt-2"
+                            src={file1}
+                            width={150}
+                            height={150}
+                            style={style1}
+                            />
+                </Grid>
                 <Grid item xs={4}>
                         <MDButton
                         variant="contained"
@@ -429,7 +468,8 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                         color="primary"
                         fullWidth
                         >
-                        Submit
+                                                   {direction == "rtl" ? "إضافة" : "Submit"}
+
                         </MDButton>
                 </Grid>
                 <Grid item xs={2}>
@@ -440,7 +480,7 @@ export const CreateProduct = ({ product, isCreate, backToPrevious }) =>
                         color="warning"
                         fullWidth
                         >
-                        Back
+                                                   {direction == "rtl" ? "عودة" : "Back"}
                         </MDButton>
                 </Grid>
                     </Grid>

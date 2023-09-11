@@ -141,7 +141,7 @@ function Users() {
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (number, id) => {
     setId(id)
-    setMessage("هل تريد حذف هذا العنصر؟")
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -315,7 +315,7 @@ function Users() {
         show && 
         <>
          <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل مستخدم" : "Create or Edit User"} />
-         <CreateUser isCreate={createNew} product={_user} backToPrevious={() => back()} />
+         <CreateUser direction={direction} isCreate={createNew} product={_user} backToPrevious={() => back()} />
         </>
       }
       <DamageDialog />

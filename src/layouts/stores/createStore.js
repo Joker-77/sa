@@ -1,12 +1,12 @@
 /* eslint-disable */
 import React, { useState, useEffect, useMemo } from "react";
-import { TextField, Grid, MenuItem } from "@mui/material";
+import { TextField, Grid, MenuItem, Typography } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as yup from "yup"
 import MDButton from "components/MDButton";
 import { toast } from 'react-toastify';
 import StoresService from "services/StoresService";
-export const CreateStore = ({ store, isCreate, backToPrevious }) => 
+export const CreateStore = ({ direction, store, isCreate, backToPrevious }) => 
 {
     const FILE_SIZE = 524288;
     const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png"];
@@ -128,7 +128,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="English Name"
+                            label={direction == "rtl" ? "الاسم بالإنكليزي" : "English Name"}
                             name="en_name"
                             variant="outlined"
                             margin="dense"
@@ -143,7 +143,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Arabic Name"
+                            label={direction == "rtl" ? "الاسم بالعربي" : "Arabic Name"}
                             name="ar_name"
                             variant="outlined"
                             margin="dense"
@@ -158,7 +158,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Email address"
+                            label={direction == "rtl" ? "عنوان البريد الإلكتروني" : "Email address"}
                             name="email"
                             variant="outlined"
                             margin="dense"
@@ -173,7 +173,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Phone"
+                            label={direction == "rtl" ? "رقم الهاتف" : "phone"}
                             name="phone"
                             variant="outlined"
                             margin="dense"
@@ -188,7 +188,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="English Address"
+                            label={direction == "rtl" ? "العنوان بالإنكليزي" : "English Address"}
                             name="en_address"
                             variant="outlined"
                             margin="dense"
@@ -203,7 +203,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Arabic Address"
+                            label={direction == "rtl" ? "العنوان بالعربي" : "Arabic Address"}
                             name="ar_address"
                             variant="outlined"
                             margin="dense"
@@ -219,7 +219,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                     <Grid item xs={12} md={10}>
                         <TextField
                             style={{ height: "3em" }}
-                            label="Country"
+                            label={direction == "rtl" ? "الدولة" : "Country"}
                             name="country_id"
                             variant="outlined"
                             margin="dense"
@@ -240,6 +240,9 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                         </TextField>
                     </Grid>
                     <Grid item xs={12} md={10}>
+                         <Typography variant="h6">
+                                {direction == "rtl" ? "الصورة الأولى" : "First Image"}
+                        </Typography>
                         <TextField
                         name="image"
                         type="file"
@@ -266,7 +269,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                         color="primary"
                         fullWidth
                         >
-                        Submit
+                            {direction == "rtl" ? "إضافة" : "Submit"}
                         </MDButton>
                 </Grid>
                 <Grid item xs={2}>
@@ -277,7 +280,7 @@ export const CreateStore = ({ store, isCreate, backToPrevious }) =>
                         color="warning"
                         fullWidth
                         >
-                        Back
+                            {direction == "rtl" ? "عودة" : "Back"}
                         </MDButton>
                 </Grid>
                     </Grid>

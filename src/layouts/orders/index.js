@@ -150,7 +150,7 @@ function Orders() {
   const handleClickOpen = (number, id) => {
     setDelete(number)
     setId(id)
-    setMessage("هل تريد حذف هذا العنصر؟")
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -188,9 +188,11 @@ function Orders() {
         </DialogTitle>
         <DialogActions>
           <MDButton  color="primary" onClick={handleAction} autoFocus>
-            نعم
-          </MDButton>
-          <MDButton color="red" onClick={handleClose}>لا</MDButton>
+          { direction == "ltr" ? "Yes" : "نعم" }
+            </MDButton>
+            <MDButton color="red" onClick={handleClose}>
+            { direction == "ltr" ? "No" : "لا" }
+            </MDButton>
         </DialogActions>
       </Dialog>
   }

@@ -17,28 +17,21 @@ import {
   useMaterialUIController,
 } from "context";
 import { useEffect, useState } from "react";
-import ProductsService from "services/ProductsService";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import ComplaintsService from "services/ComplaintsService"
 import { toast } from 'react-toastify';
 
-function Damaged() {
-  const [products, setProducts] = useState([]);
+function Complaints() {
+  const [complaints, setComplaints] = useState([]);
   const [rows, setFiltered] = useState([]);
   const [controller, dispatch] = useMaterialUIController();
   const {
-    openConfigurator,
-    fixedNavbar,
-    sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
     direction,
   } = controller;
-  const backendUrl = "https://back.trendfuture.shop";
   const columns = [
     {
       Header: direction == "ltr" ? "Id" : "المعرّف",
@@ -49,99 +42,67 @@ function Damaged() {
       dataKey: 'id',
     },
     {
-      Header:  direction == "ltr" ? "English Name":"الاسم بالإنكليزي",
+      Header:  direction == "ltr" ? "Name":"الاسم",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.en_name}
+      {d.name}
     </MDTypography> },
       width: 50,
-      dataKey: 'en_name',
+      dataKey: 'name',
     },
     {
-      Header: direction == "ltr" ? "Arabic Name" : "الاسم بالعربي",
+      Header: direction == "ltr" ? "Email" : "عنوان الإيميل",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.ar_name}
+      {d.email}
     </MDTypography> },
       width: 50,
-      dataKey: 'ar_name',
+      dataKey: 'email',
     },
     {
-      Header: direction == "ltr" ? "Unit Price" : "سعر الواحدة",
+      Header: direction == "ltr" ? "Complaint" : "الشكوى",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.unit_price}
+      {d.message}
     </MDTypography> },
       width: 50,
-      dataKey: 'unit_price',
+      dataKey: 'message',
     },
     {
-      Header: direction == "ltr" ? "Selling Price" : "سعر المبيع ($)",
+      Header: direction == "ltr" ? "User" : "المستخدم",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.selling_price}
+      {d.user?.name}
     </MDTypography> },
       width: 50,
-      dataKey: 'selling_price',
-    },
-    {
-      Header: direction == "ltr" ? "Quantity" : "الكمية",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.entity}
-    </MDTypography> },
-      width: 50,
-      dataKey: 'entity',
-    },
-    {
-      Header: direction == "ltr" ? "Brand" : "النوع",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.brand}
-    </MDTypography> },
-      width: 50,
-      dataKey: 'brand',
-    },
-    {
-      Header: direction == "ltr" ? "Image" : "الصورة",
-      accessor: (d) => 
-      { 
-        return <img src={`${backendUrl}/upload/${d.image}`} width="50" height="50" /> 
-      },
-      width: 50,
-      dataKey: 'brand',
+      dataKey: 'message',
     },
     {
       Header: direction == "ltr" ? "Actions" : "إعدادات",
       accessor: (d) => 
       { 
-        return <>  
-                  <MDButton  onClick={() => handleClickOpen(0, d.id)} color="warning" style={{ margin: '0 5px 0 5px' }}>
-                    {direction == 'rtl' ? "استعادة" : "Restore"}
-                  </MDButton>
-                  {/* <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
-                    {direction == 'rtl' ? "حذف" : "Edit"}
-                  </MDButton> */}
-               </>
+        return <> 
+                  <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
+                    {direction == 'rtl' ? "حذف" : "Delete"}
+                  </MDButton> </>
       },
       width: 50,
     }
   ];
-  const getProducts = () => {
-    ProductsService.getAllDamagedProducts()
+  const getComplaints = () => {
+    ComplaintsService.getAllComplaints()
     .then(resp => {
-      console.log("resp", resp)
+      console.log(resp)
       setFiltered(resp.data);
-      setProducts(resp.data);
+      setComplaints(resp.data);
     })
   }
   useEffect(() => {
-    getProducts()
+    getComplaints()
   }, [])
   // Damage Dialog
   const [open, setOpen] = React.useState(false);
-  const [del, setDelete] = React.useState(0);
   const [id, setId] = React.useState(0);
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (number, id) => {
-    setDelete(number)
     setId(id)
-    direction == "rtl" ? setMessage("هل تريد استعادة هذا العنصر؟") : setMessage("Are you sure you want to restore this item")
-
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -149,28 +110,15 @@ function Damaged() {
     setOpen(false);
   };
   const handleAction = () => {
-    if(del == 0) {
-      ProductsService.restoreProduct(id)
+      ComplaintsService.deleteComplaint(id)
       .then(resp => {
-        toast.success(resp.message)
-        getProducts()
+        toast.success("Complaint deleted succesfully")
+        getComplaints()
         setOpen(false)
       })
       .catch(error => {
         toast.error(error?.response?.data?.message)
       })
-    }
-    else {
-      ProductsService.deleteProduct(id)
-      .then(resp => {
-        toast.success("Product deleted succesfully")
-        getProducts()
-        setOpen(false)
-      })
-      .catch(error => {
-        toast.error(error?.response?.data?.message)
-      })
-    }
   }
   const DamageDialog = (props) => {
     return <Dialog
@@ -220,7 +168,7 @@ function Damaged() {
     setSearch(value)
     if(!!value)
     {
-      let _searched = products.filter(e => e.en_name.toLowerCase().includes(value) 
+      let _searched = complaints.filter(e => e.en_name.toLowerCase().includes(value) 
       || e.ar_name.toLowerCase().includes(value)
       || e.brand.toLowerCase().includes(value)
       || e.unit_price.toString().toLowerCase().includes(value)
@@ -229,13 +177,12 @@ function Damaged() {
       setFiltered(_searched)
     }
     else 
-    setFiltered(products)
+    setFiltered(complaints)
   }, 100);
   //
   return (
     <DashboardLayout>
-      {
-       <> <DashboardNavbar name={direction == 'rtl' ? "المنتجات التالفة" : "Damaged Products"} />
+      <DashboardNavbar name={direction == 'rtl' ? "الشكاوى" : "Complaints"} />
         <MDInput
           style={{ marginTop: "1em" }}
           placeholder={direction == 'rtl' ? "بحث" : "Search"}
@@ -261,12 +208,12 @@ function Damaged() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                  {direction == 'rtl' ? "جدول المنتجات التالفة" : "Damaged Products Table"}
+                  {direction == 'rtl' ? "جدول الشكاوى" : "Complaints Table"}
                   </MDTypography>
                 </MDBox>
                 {rows != null && rows.length > 0 &&  
                  <DataTable
-                    type='products'
+                    type='coupons'
                     table={{ columns, rows }}
                     isSorted={true}
                     entriesPerPage={true}
@@ -278,11 +225,10 @@ function Damaged() {
               </Card>
             </Grid>
           </Grid>
-        </MDBox> </>
-      }
+        </MDBox>
       <DamageDialog />
     </DashboardLayout>
   );
 }
 
-export default Damaged;
+export default Complaints;

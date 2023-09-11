@@ -9,7 +9,7 @@ import CouponsService from "services/CouponsService";
 import { toast } from 'react-toastify';
 import { UsersService } from "services/UsersService";
 
-export const CreateUser = ({ user, isCreate, backToPrevious }) => 
+export const CreateUser = ({ direction, user, isCreate, backToPrevious }) => 
 {
     console.clear()
     console.log(user)
@@ -119,7 +119,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Name"
+                            label={direction == "rtl" ? "الاسم" : "Name"}
                             name="name"
                             variant="outlined"
                             margin="dense"
@@ -134,7 +134,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Email"
+                            label={direction == "rtl" ? "الإيميل" : "Email"}
                             name="email"
                             variant="outlined"
                             margin="dense"
@@ -149,7 +149,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Password"
+                            label={direction == "rtl" ? "كلمة المرور" : "Password"}
                             name="password"
                             type="password"
                             variant="outlined"
@@ -165,7 +165,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Confirm Password"
+                            label={direction == "rtl" ? "تأكيد كلمة المرور" : "Confirm Password"}
                             name="confirmPassword"
                             type="password"
                             variant="outlined"
@@ -181,7 +181,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="phone"
+                            label={direction == "rtl" ? "رقم الهاتف" : "phone"}
                             name="phone"
                             variant="outlined"
                             margin="dense"
@@ -196,7 +196,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="address"
+                            label={direction == "rtl" ? "العنوان" : "address"}
                             name="address"
                             variant="outlined"
                             margin="dense"
@@ -211,7 +211,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Role"
+                            label={direction == "rtl" ? "الدور" : "Role"}
                             name="role"
                             variant="outlined"
                             margin="dense"
@@ -226,7 +226,7 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                 </Grid>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="birthday"
+                            label={direction == "rtl" ? "تاريخ الميلاد" : "birthday"}
                             type="date"
                             name="birthday"
                             variant="outlined"
@@ -247,7 +247,8 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                         color="primary"
                         fullWidth
                         >
-                        Submit
+                                                 {direction == "rtl" ? "إضافة" : "Submit"}
+
                         </MDButton>
                 </Grid>
                 <Grid item xs={2}>
@@ -258,7 +259,8 @@ export const CreateUser = ({ user, isCreate, backToPrevious }) =>
                         color="warning"
                         fullWidth
                         >
-                        Back
+                                                   {direction == "rtl" ? "عودة" : "Back"}
+
                         </MDButton>
                 </Grid>
                     </Grid>

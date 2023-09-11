@@ -12,6 +12,8 @@ import Users from "layouts/users";
 import Coupons from "layouts/coupons";
 import Dashboard from "layouts/dashboard";
 import Orders from "layouts/orders";
+import Sliders from "layouts/sliders";
+import Complaints from "layouts/complaints";
 
 const routes = [
   {
@@ -92,6 +94,26 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/orders",
     component: <Orders />,
+    isPrivate: true,
+  },
+  {
+    type: "collapse",
+    name: "Sliders",
+    ar_name: "الصورة المنزلقة",
+    key: "sliders",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/sliders",
+    component: <Sliders />,
+    isPrivate: true,
+  },
+  {
+    type: "collapse",
+    name: "complaints",
+    ar_name: "الشكاوى",
+    key: "complaints",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/complaints",
+    component: <Complaints />,
     isPrivate: true,
   },
   {

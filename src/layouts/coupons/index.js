@@ -103,7 +103,7 @@ function Coupons() {
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (number, id) => {
     setId(id)
-    setMessage("هل تريد حذف هذا العنصر؟")
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -255,7 +255,7 @@ function Coupons() {
         show && 
         <>
          <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل كوبون" : "Create or Edit Coupon"} />
-         <CreateCoupon isCreate={createNew} coupon={_coupons} backToPrevious={() => back()} />
+         <CreateCoupon direction={direction} isCreate={createNew} coupon={_coupons} backToPrevious={() => back()} />
         </>
       }
       <DamageDialog />

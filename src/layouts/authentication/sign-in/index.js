@@ -31,18 +31,23 @@ import { useAuthState } from "context/Auth";
 import { loginUser } from "context/Auth";
 import { useAuthDispatch } from "context/Auth";
 import { useNavigate   } from "react-router-dom";
+import { toast } from "react-toastify";
 function Basic() {
   const dispatch = useAuthDispatch();
-  const userDetails = useAuthState();
-  console.log(userDetails);
-  if (userDetails.isLoggedIn) return <Navigate to="/dashboard" />;
- 
+  const userDetails = JSON.parse(localStorage.getItem("userDetails")) || useAuthState();
+  if (userDetails.isLoggedIn)  {
+    localStorage.setItem("userDetails", JSON.stringify(userDetails));
+    return <Navigate to="/dashboard" />;
+  }
+  if (userDetails.errorMessage){
+    toast.error(userDetails.errorMessage?.response?.data?.message)
+  }
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] =  useState("");
   const [password, setPassword] = useState("");
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const submitUser = async () => {
-    await loginUser(dispatch, email, password);    
+    await loginUser(dispatch, email, password); 
   }
   return (
     <BasicLayout image={bgImage}>

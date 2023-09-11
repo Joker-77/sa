@@ -7,7 +7,7 @@ import MDButton from "components/MDButton";
 import CouponsService from "services/CouponsService"
 import { toast } from 'react-toastify';
 import UsersService from "services/UsersService";
-export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) => 
+export const CreateCoupon = ({ direction, coupon, isCreate, backToPrevious }) => 
 {
     console.log(coupon)
     const couponValidation = yup.object().shape({
@@ -115,7 +115,7 @@ export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) =>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label="Discount"
+                            label={direction == "rtl" ? "قيمة الحسم" : "Discount"}
                             name="discounts"
                             variant="outlined"
                             margin="dense"
@@ -131,7 +131,7 @@ export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Code"
+                            label={direction == "rtl" ? "الكود" : "Code"}
                             name="code"
                             variant="outlined"
                             margin="dense"
@@ -142,7 +142,7 @@ export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) =>
                     </Grid>
                     <Grid item xs={12} md={10}>
                         <TextField
-                            label="Type"
+                            label={direction == "rtl" ? "النوع" : "Type"}
                             name="type"
                             variant="outlined"
                             margin="dense"
@@ -162,7 +162,7 @@ export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) =>
                         color="primary"
                         fullWidth
                         >
-                        Submit
+                           {direction == "rtl" ? "إضافة" : "Submit"}
                         </MDButton>
                 </Grid>
                 <Grid item xs={2}>
@@ -173,7 +173,7 @@ export const CreateCoupon = ({ coupon, isCreate, backToPrevious }) =>
                             color="warning"
                             fullWidth
                             >
-                            Back
+                           {direction == "rtl" ? "عودة" : "Back"}
                         </MDButton>
                 </Grid>
                     </Grid>

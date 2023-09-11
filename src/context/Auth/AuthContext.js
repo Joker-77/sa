@@ -11,7 +11,6 @@ export function useAuthState() {
   if (context === undefined) {
     throw new Error("useAuthState must be used within a AuthProvider");
   }
-
   return context;
 }
 
@@ -20,7 +19,6 @@ export function useAuthDispatch() {
   if (context === undefined) {
     throw new Error("useAuthDispatch must be used within a AuthProvider");
   }
-
   return context;
 }
 

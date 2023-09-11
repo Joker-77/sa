@@ -1,9 +1,9 @@
 /* eslint-disable */
 import api from "./Api";
-export class OrdersService {
-    static getAllOrders() {
+export class SlidersService {
+    static getAllSliders() {
         return api
-            .get("/orders")
+            .get("/slider")
             .then((response) => {
                 if (response && response.data) {
                     console.clear()
@@ -12,8 +12,8 @@ export class OrdersService {
                 }
             });
     }
-    static addOrder(payload) {
-        return api.post("/orders", payload, {
+    static addSlider(payload) {
+        return api.post("/slider", payload, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -23,20 +23,8 @@ export class OrdersService {
             }
         });
     }
-    static updateOrder(id, payload) {
-        return api.post("/orders/edit/" + id, payload, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then((response) => {
-            if (response && response.data) {
-                console.log(response)
-                return response.data;
-            }
-        });
-    }
-    static deleteOrder(id) {
-        return api.delete("/orders/" + id, null, {
+    static updateSlider(id, payload) {
+        return api.post("/slider/edit/" + id , payload, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -47,8 +35,8 @@ export class OrdersService {
             }
         });
     }
-    static changeStatus(id, payload) {
-        return api.post(`/orders/${id}/change-status`, payload, {
+    static deleteSlider(id) {
+        return api.delete("/slider/delete/" + id , null, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -61,4 +49,4 @@ export class OrdersService {
     }
 }
 
-export default OrdersService;
+export default SlidersService;

@@ -95,7 +95,7 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const userDetails = useAuthState();
+  const userDetails = JSON.parse(localStorage.getItem("userDetails")) || useAuthState();
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {

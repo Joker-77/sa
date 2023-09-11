@@ -26,6 +26,7 @@ class TokenService {
   static removecurrentUser() {
     localStorage.removeItem("coursesToken");
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("userDetails");
   }
 }
 

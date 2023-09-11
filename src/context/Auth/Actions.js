@@ -14,8 +14,6 @@ export async function loginUser(dispatch, email, password) {
     });
     let data = await AuthService.login(payload);
     if (data.user) {
-      console.clear()
-      console.log("data", data);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: data
@@ -24,7 +22,7 @@ export async function loginUser(dispatch, email, password) {
     }
     dispatch({
       type: "LOGIN_ERROR",
-      error: data.errors[0]
+      error: data
     });
     return;
   } catch (error) {
@@ -39,5 +37,5 @@ export async function logout(dispatch) {
   dispatch({
     type: "LOGOUT"
   });
-  TokenService.logout();
+  TokenService.removecurrentUser();
 }

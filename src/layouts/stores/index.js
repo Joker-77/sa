@@ -146,7 +146,7 @@ function Stores() {
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (id) => {
     setId(id)
-    setMessage("هل تريد حذف هذا العنصر؟")
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -287,7 +287,7 @@ function Stores() {
         show && 
         <>
          <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل متجر" : "Create or Edit Store"} />
-         <CreateStore isCreate={createNew} store={_store} backToPrevious={() => back()} />
+         <CreateStore direction={direction} isCreate={createNew} store={_store} backToPrevious={() => back()} />
         </>
       }
       <DamageDialog />

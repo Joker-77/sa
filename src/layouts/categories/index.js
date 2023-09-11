@@ -115,7 +115,7 @@ function Categories() {
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (id) => {
     setId(id)
-    setMessage("هل تريد حذف هذا العنصر؟")
+    direction == "rtl" ? setMessage("هل تريد حذف هذا العنصر؟") : setMessage("Are you sure you want to delete this item")
     setOpen(true);
   };
 
@@ -256,7 +256,7 @@ function Categories() {
         show && 
         <>
          <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل صنف" : "Create or Edit Category"} />
-         <CreateCategory isCreate={createNew} category={_category} backToPrevious={() => back()} />
+         <CreateCategory direction={direction} isCreate={createNew} category={_category} backToPrevious={() => back()} />
         </>
       }
       <DamageDialog />

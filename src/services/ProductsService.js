@@ -10,6 +10,15 @@ export class ProductsService {
                 }
             });
     }
+    static getMostRatings(){
+        return api
+        .get("/mostrating")
+        .then((response) => {
+            if (response && response.data) {
+                return response.data;
+            }
+        });
+    }
     static getAllDamagedProducts() {
         return api
             .delete("/products/damaged_recored", null)

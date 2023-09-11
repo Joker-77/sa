@@ -1,13 +1,13 @@
-/* eslint-disable no-shadow */
+/* eslint-disable */
 /* eslint-disable prefer-const */
 // Context/reducer.js
 
-let user = localStorage.getItem("currentUser")
-  ? JSON.parse(localStorage.getItem("currentUser")).user
-  : "";
-let token = localStorage.getItem("currentUser")
-  ? JSON.parse(localStorage.getItem("currentUser")).auth_token
-  : "";
+let user = localStorage.getItem("currentUser") ?
+  JSON.parse(localStorage.getItem("currentUser")).user :
+  "";
+let token = localStorage.getItem("currentUser") ?
+  JSON.parse(localStorage.getItem("currentUser")).auth_token :
+  "";
 
 export const initialState = {
   userDetails: "" || user,
@@ -28,23 +28,22 @@ export const AuthReducer = (initialState, action) => {
       return {
         ...initialState,
         user: action.payload.user,
-        token: action.payload.access,
-        isLoggedIn: true,
-        loading: false,
+          token: action.payload.access,
+          isLoggedIn: true,
+          loading: false,
       };
     case "LOGOUT":
       return {
         ...initialState,
         isLoggedIn: false,
-        user: "",
-        token: "",
+          user: null,
+          token: "",
       };
-
     case "LOGIN_ERROR":
       return {
         ...initialState,
         loading: false,
-        errorMessage: action.error,
+          errorMessage: action.error,
       };
     default:
       throw new Error(`Unhandled action type: ${action.type}`);

@@ -314,7 +314,7 @@ function Products() {
         show && 
         <>
          <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل منتج" : "Create or Edit Product"} />
-         <CreateProduct isCreate={createNew} product={_product} backToPrevious={() => back()} />
+         <CreateProduct direction={direction} isCreate={createNew} product={_product} backToPrevious={() => back()} />
         </>
       }
       <DamageDialog />

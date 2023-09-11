@@ -15,18 +15,26 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import {
   useMaterialUIController,
+  setOpenConfigurator,
+  setTransparentSidenav,
+  setWhiteSidenav,
+  setFixedNavbar,
+  setSidenavColor,
+  setDarkMode,
+  setDirection,
 } from "context";
 import { useEffect, useState } from "react";
-import ProductsService from "services/ProductsService";
+import SlidersService from "services/SlidersService";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import { toast } from 'react-toastify';
+import { CreateSlider } from "./createSlider";
 
-function Damaged() {
-  const [products, setProducts] = useState([]);
+function Sliders() {
+  const [products, setSliders] = useState([]);
   const [rows, setFiltered] = useState([]);
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -49,52 +57,36 @@ function Damaged() {
       dataKey: 'id',
     },
     {
-      Header:  direction == "ltr" ? "English Name":"الاسم بالإنكليزي",
+      Header:  direction == "ltr" ? "English Title":"العنوان بالإنكليزي",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.en_name}
+      {d.en_title}
     </MDTypography> },
       width: 50,
-      dataKey: 'en_name',
+      dataKey: 'en_title',
     },
     {
-      Header: direction == "ltr" ? "Arabic Name" : "الاسم بالعربي",
+      Header: direction == "ltr" ? "Arabic Title" : "العنوان بالعربي",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.ar_name}
+      {d.ar_title}
     </MDTypography> },
       width: 50,
       dataKey: 'ar_name',
     },
     {
-      Header: direction == "ltr" ? "Unit Price" : "سعر الواحدة",
+      Header:  direction == "ltr" ? "English SubTitle":"العنوان الفرعي بالإنكليزي",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.unit_price}
+      {d.en_title1}
     </MDTypography> },
       width: 50,
-      dataKey: 'unit_price',
+      dataKey: 'en_title',
     },
     {
-      Header: direction == "ltr" ? "Selling Price" : "سعر المبيع ($)",
+      Header: direction == "ltr" ? "Arabic SubTitle" : "العنوان الفرعي بالعربي",
       accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.selling_price}
+      {d.ar_title1}
     </MDTypography> },
       width: 50,
-      dataKey: 'selling_price',
-    },
-    {
-      Header: direction == "ltr" ? "Quantity" : "الكمية",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.entity}
-    </MDTypography> },
-      width: 50,
-      dataKey: 'entity',
-    },
-    {
-      Header: direction == "ltr" ? "Brand" : "النوع",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.brand}
-    </MDTypography> },
-      width: 50,
-      dataKey: 'brand',
+      dataKey: 'ar_name',
     },
     {
       Header: direction == "ltr" ? "Image" : "الصورة",
@@ -109,28 +101,26 @@ function Damaged() {
       Header: direction == "ltr" ? "Actions" : "إعدادات",
       accessor: (d) => 
       { 
-        return <>  
-                  <MDButton  onClick={() => handleClickOpen(0, d.id)} color="warning" style={{ margin: '0 5px 0 5px' }}>
-                    {direction == 'rtl' ? "استعادة" : "Restore"}
-                  </MDButton>
-                  {/* <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
-                    {direction == 'rtl' ? "حذف" : "Edit"}
-                  </MDButton> */}
-               </>
+        return <>  <MDButton onClick={() => showSlider(d)} style={{ margin: '0 5px 0 5px', backgroundColor: "lightblue" }}>
+                        {direction == 'rtl' ? "تعديل" : "Edit"}
+                  </MDButton>  
+                  <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
+                    {direction == 'rtl' ? "حذف" : "Delete"}
+                  </MDButton> </>
       },
       width: 50,
     }
   ];
-  const getProducts = () => {
-    ProductsService.getAllDamagedProducts()
+  const getSliders = () => {
+    SlidersService.getAllSliders()
     .then(resp => {
-      console.log("resp", resp)
+      console.log(resp)
       setFiltered(resp.data);
-      setProducts(resp.data);
+      setSliders(resp.data);
     })
   }
   useEffect(() => {
-    getProducts()
+    getSliders()
   }, [])
   // Damage Dialog
   const [open, setOpen] = React.useState(false);
@@ -140,8 +130,7 @@ function Damaged() {
   const handleClickOpen = (number, id) => {
     setDelete(number)
     setId(id)
-    direction == "rtl" ? setMessage("هل تريد استعادة هذا العنصر؟") : setMessage("Are you sure you want to restore this item")
-
+    number == 0 ? setMessage("هل تريد إتلاف هذا العنصر؟") : setMessage("هل تريد حذف هذا العنصر؟")
     setOpen(true);
   };
 
@@ -150,10 +139,10 @@ function Damaged() {
   };
   const handleAction = () => {
     if(del == 0) {
-      ProductsService.restoreProduct(id)
+      SlidersService.damageSlider(id)
       .then(resp => {
         toast.success(resp.message)
-        getProducts()
+        getSliders()
         setOpen(false)
       })
       .catch(error => {
@@ -161,10 +150,10 @@ function Damaged() {
       })
     }
     else {
-      ProductsService.deleteProduct(id)
+      SlidersService.deleteSlider(id)
       .then(resp => {
-        toast.success("Product deleted succesfully")
-        getProducts()
+        toast.success("Slider deleted succesfully")
+        getSliders()
         setOpen(false)
       })
       .catch(error => {
@@ -232,10 +221,30 @@ function Damaged() {
     setFiltered(products)
   }, 100);
   //
+  const [show, setShow] = useState(false);
+  const [createNew, setCreate] = useState(false);
+  const [_slider, setSlider] = useState(null);
+  const showSlider = (d) => {
+    setShow(true);
+    setSlider(d);
+    setCreate(false);
+  }
+  const addNew = () => {
+    setCreate(true);
+    setShow(true);
+  } 
+  const back = () => {
+    setCreate(false)
+    setShow(false)
+    setSlider(null)
+  }
   return (
     <DashboardLayout>
       {
-       <> <DashboardNavbar name={direction == 'rtl' ? "المنتجات التالفة" : "Damaged Products"} />
+        !show && <> <DashboardNavbar name={direction == 'rtl' ? "الصور المنزلقة" : "Sliders"} />
+        <MDButton onClick={() => addNew()} color="primary">
+        {direction == 'rtl' ? "إضافة صورة منزلقة" : "Create Slider"}
+        </MDButton>
         <MDInput
           style={{ marginTop: "1em" }}
           placeholder={direction == 'rtl' ? "بحث" : "Search"}
@@ -261,12 +270,12 @@ function Damaged() {
                   coloredShadow="info"
                 >
                   <MDTypography variant="h6" color="white">
-                  {direction == 'rtl' ? "جدول المنتجات التالفة" : "Damaged Products Table"}
+                  {direction == 'rtl' ? "جدول الصور المنزلقة " : "Sliders Table"}
                   </MDTypography>
                 </MDBox>
                 {rows != null && rows.length > 0 &&  
                  <DataTable
-                    type='products'
+                    type='sliders'
                     table={{ columns, rows }}
                     isSorted={true}
                     entriesPerPage={true}
@@ -280,9 +289,16 @@ function Damaged() {
           </Grid>
         </MDBox> </>
       }
+      {
+        show && 
+        <>
+         <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل صورة منزلقة" : "Create or Edit Slider"} />
+         <CreateSlider direction={direction} isCreate={createNew} slider={_slider} backToPrevious={() => back()} />
+        </>
+      }
       <DamageDialog />
     </DashboardLayout>
   );
 }
 
-export default Damaged;
+export default Sliders;

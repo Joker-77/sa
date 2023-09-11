@@ -4,22 +4,36 @@ import { TextField, Grid, MenuItem, Typography } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as yup from "yup"
 import MDButton from "components/MDButton";
+import CategoriesService from "services/CategoriesService"
+import CouponsService from "services/CouponsService";
 import { toast } from 'react-toastify';
-import CategoriesService from "services/CategoriesService";
-export const CreateCategory = ({ category, isCreate, backToPrevious, direction }) => 
+import { SlidersService } from "services/SlidersService";
+import { StoresService } from "services/StoresService";
+export const CreateSlider = ({ direction, slider, isCreate, backToPrevious }) => 
 {
-    
+    console.clear()
+    console.log(slider)
     const FILE_SIZE = 524288;
     const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png"];
     // const phoneNumberRegEx = /^[0-1]{2}[0-9]{9}/;
     // const PasswordRegEx = /^.*((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
-    const categoryValidation = yup.object().shape({
-        name: yup
+    const sliderValidation = yup.object().shape({
+        en_title: yup
             .string()
             .min(3, "Too Short !")
             .max(30, "Too Long !")
             .required("Required !"),
-        name_a: yup
+        ar_title: yup
+            .string()
+            .min(3, "Too Short !")
+            .max(30, "Too Long !")
+            .required("Required !"),
+        en_title1: yup
+            .string()
+            .min(3, "Too Short !")
+            .max(30, "Too Long !")
+            .required("Required !"),
+        ar_title1: yup
             .string()
             .min(3, "Too Short !")
             .max(30, "Too Long !")
@@ -29,119 +43,132 @@ export const CreateCategory = ({ category, isCreate, backToPrevious, direction }
         () => {
         if (isCreate)
             return {
-                name: "",
-                name_a: "",
+                en_title: "",
+                ar_title: "",
+                en_title1: "",
+                ar_title1: "",
             };
         else 
             return {
-                    name: category?.name,
-                    name_a: category?.name_a,
-                }
+                en_title: slider?.en_title,
+                ar_title: slider?.ar_title,
+                en_title1: slider?.en_title1,
+                ar_title1: slider?.ar_title1,
+            }
         },
         [isCreate]
       );
   
-    console.log(category)
     const [selectedFile, setSelectedFile] = useState(null);
     const [file, setFile] = useState();
-
-    const [selectedFile1, setSelectedFile1] = useState(null);
-    const [file1, setFile1] = useState();
-
     function handleChange(e) {
         setSelectedFile(e.target.files[0]);
         setFile(URL.createObjectURL(e.target.files[0]));
         imageStyle.display = 'inline-block';
         setStyle(imageStyle);
       }
-    function handleChange1(e) {
-        setSelectedFile1(e.target.files[0]);
-        setFile1(URL.createObjectURL(e.target.files[0]));
-        imageStyle1.display = 'inline-block';
-        setStyle1(imageStyle1);
-      }
-    const handleSubmit = (values, props) => {
+      const handleSubmit = (values, props) => {
         if(selectedFile == null)
         {
-            toast.error("Primary Image is required")
+            toast.error("Image is required")
             return
         }
-        if(selectedFile1 == null)
-        {
-            toast.error("Second Image is required")
-            return
-        }
+        console.log(values);
         var data = new FormData();
         Object.keys(values).forEach((e) => {
-        data.append(e, values[e]);
+            data.append(e, values[e]);
         });
         if (selectedFile) data.append('image', selectedFile);
-        if (selectedFile1) data.append('image1', selectedFile);
         if(isCreate)
         {
-            CategoriesService.addCategory(data).then(resp => { 
+            SlidersService.addSlider(data).then(resp => { 
                 toast.success(resp.message);
             }).catch(error => toast.error("An error"))
         }
         else {
-            CategoriesService.updateCategory(category.id, data).then(resp => { 
+            SlidersService.updateSlider(slider.id, data).then(resp => { 
                 toast.success(resp.message);
             }).catch(error => toast.error("An error"))
         }
     };
-   
+  
     let imageStyle = {
         display: 'none',
       };
     const [style, setStyle] = useState(imageStyle);
-
-    let imageStyle1 = {
-        display: 'none',
-      };
-    const [style1, setStyle1] = useState(imageStyle1);
     return <React.Fragment>
                 <Formik
                 initialValues={initialValue}
-                validationSchema={categoryValidation}
+                validationSchema={sliderValidation}
                 onSubmit={handleSubmit}
                 >
                      {(props) => {
-                        const { name, name_a } = props.values;
+                        const { en_title, ar_title, en_title1, ar_title1 } = props.values;
                 return (
                   <Form>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={10}>
                         <TextField
-                            label={direction == "rtl" ? "الاسم بالإنكليزي" : "English Name"}
-                            name="name"
+                            label={direction == "rtl" ? "العنوان بالإنكليزي" : "English Title"}
+                            name="en_title"
                             variant="outlined"
                             margin="dense"
-                            value={name}
+                            value={en_title}
                             fullWidth
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            helperText={<ErrorMessage name="name" />}
-                            error={props.errors.name && props.touched.name}
+                            helperText={<ErrorMessage name="en_title" />}
+                            error={props.errors.en_title && props.touched.en_title}
                             required
                         />
-                    </Grid>
-                    <Grid item xs={12} md={10}>
+                </Grid>
+                <Grid item xs={12} md={10}>
                         <TextField
-                            label={direction == "rtl" ? "الاسم بالعربي" : "Arabic Name"}
-                            name="name_a"
+                            label={direction == "rtl" ? "العنوان بالعربي" : "Arabic Title"}
+                            name="ar_title"
                             variant="outlined"
                             margin="dense"
-                            value={name_a}
+                            value={ar_title}
                             fullWidth
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            helperText={<ErrorMessage name="name_a" />}
-                            error={props.errors.name_a && props.touched.name_a}
+                            helperText={<ErrorMessage name="ar_title" />}
+                            error={props.errors.ar_title && props.touched.ar_title}
                             required
                         />
-                    </Grid>
-                    <Grid item xs={12} md={10}>
-                         <Typography variant="h6">
+                </Grid>
+                <Grid item xs={12} md={10}>
+                        <TextField
+                            label={direction == "rtl" ? "العنوان الفرعي بالإنكليزي" : "English SubTitle"}
+                            name="en_title1"
+                            variant="outlined"
+                            margin="dense"
+                            value={en_title1}
+                            fullWidth
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            helperText={<ErrorMessage name="en_title1" />}
+                            error={props.errors.en_title1 && props.touched.en_title1}
+                            required
+                        />
+                </Grid>
+                <Grid item xs={12} md={10}>
+                        <TextField
+                            label={direction == "rtl" ? "العنوان الفرعي بالعربي" : "Arabic SubTitle"}
+                            name="ar_title1"
+                            variant="outlined"
+                            margin="dense"
+                            value={ar_title1}
+                            fullWidth
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            helperText={<ErrorMessage name="ar_title1" />}
+                            error={props.errors.ar_title1 && props.touched.ar_title1}
+                            required
+                        />
+                </Grid>
+                <Grid item xs={12} md={10}>
+                        <Typography variant="h6">
                                 {direction == "rtl" ? "الصورة الأولى" : "First Image"}
                         </Typography>
                         <TextField
@@ -155,37 +182,14 @@ export const CreateCategory = ({ category, isCreate, backToPrevious, direction }
                         required
                         />
                         <img
-                            alt="category-image"
+                            alt="slider-image"
                             className="mt-2"
                             src={file}
                             width={150}
                             height={150}
                             style={style}
                             />
-                    </Grid>
-                    <Grid item xs={12} md={10}>
-                        <Typography variant="h6">
-                                {direction == "rtl" ? "الصورة الثانية" : "Secondary Image"}
-                        </Typography>
-                        <TextField
-                        name="image1"
-                        type="file"
-                        fullWidth
-                        variant="outlined"
-                        margin="dense"
-                        onChange={handleChange1}
-                        onBlur={props.handleBlur}
-                        required
-                        />
-                        <img
-                            alt="category-image"
-                            className="mt-2"
-                            src={file1}
-                            width={150}
-                            height={150}
-                            style={style1}
-                            />
-                    </Grid>
+                </Grid>
                 <Grid item xs={4}>
                         <MDButton
                         variant="contained"
@@ -193,7 +197,7 @@ export const CreateCategory = ({ category, isCreate, backToPrevious, direction }
                         color="primary"
                         fullWidth
                         >
-                        {direction == "rtl" ? "إضافة" : "Submit"}
+                            {direction == "rtl" ? "إضافة" : "Submit"}
                         </MDButton>
                 </Grid>
                 <Grid item xs={2}>
@@ -204,7 +208,7 @@ export const CreateCategory = ({ category, isCreate, backToPrevious, direction }
                         color="warning"
                         fullWidth
                         >
-                        {direction == "rtl" ? "عودة" : "Back"}
+                            {direction == "rtl" ? "عودة" : "Back"}
                         </MDButton>
                 </Grid>
                     </Grid>
