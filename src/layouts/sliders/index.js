@@ -27,10 +27,10 @@ import { useEffect, useState } from "react";
 import SlidersService from "services/SlidersService";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
-import { toast } from 'react-toastify';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import { toast } from "react-toastify";
 import { CreateSlider } from "./createSlider";
 
 function Sliders() {
@@ -46,91 +46,120 @@ function Sliders() {
     darkMode,
     direction,
   } = controller;
-  const backendUrl = "https://back.trendfuture.shop";
+  const backendUrl = "https://back.RUSA.shop";
   const columns = [
     {
       Header: direction == "ltr" ? "Id" : "المعرّف",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.id}
-    </MDTypography> },
+      accessor: (d) => {
+        return (
+          <MDTypography display="block" variant="button" fontWeight="medium">
+            {d.id}
+          </MDTypography>
+        );
+      },
       width: 20,
-      dataKey: 'id',
+      dataKey: "id",
     },
     {
-      Header:  direction == "ltr" ? "English Title":"العنوان بالإنكليزي",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.en_title}
-    </MDTypography> },
+      Header: direction == "ltr" ? "English Title" : "العنوان بالإنكليزي",
+      accessor: (d) => {
+        return (
+          <MDTypography display="block" variant="button" fontWeight="medium">
+            {d.en_title}
+          </MDTypography>
+        );
+      },
       width: 50,
-      dataKey: 'en_title',
+      dataKey: "en_title",
     },
     {
       Header: direction == "ltr" ? "Arabic Title" : "العنوان بالعربي",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.ar_title}
-    </MDTypography> },
+      accessor: (d) => {
+        return (
+          <MDTypography display="block" variant="button" fontWeight="medium">
+            {d.ar_title}
+          </MDTypography>
+        );
+      },
       width: 50,
-      dataKey: 'ar_name',
+      dataKey: "ar_name",
     },
     {
-      Header:  direction == "ltr" ? "English SubTitle":"العنوان الفرعي بالإنكليزي",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.en_title1}
-    </MDTypography> },
+      Header: direction == "ltr" ? "English SubTitle" : "العنوان الفرعي بالإنكليزي",
+      accessor: (d) => {
+        return (
+          <MDTypography display="block" variant="button" fontWeight="medium">
+            {d.en_title1}
+          </MDTypography>
+        );
+      },
       width: 50,
-      dataKey: 'en_title',
+      dataKey: "en_title",
     },
     {
       Header: direction == "ltr" ? "Arabic SubTitle" : "العنوان الفرعي بالعربي",
-      accessor: (d) => { return  <MDTypography display="block" variant="button" fontWeight="medium">
-      {d.ar_title1}
-    </MDTypography> },
+      accessor: (d) => {
+        return (
+          <MDTypography display="block" variant="button" fontWeight="medium">
+            {d.ar_title1}
+          </MDTypography>
+        );
+      },
       width: 50,
-      dataKey: 'ar_name',
+      dataKey: "ar_name",
     },
     {
       Header: direction == "ltr" ? "Image" : "الصورة",
-      accessor: (d) => 
-      { 
-        return <img src={`${backendUrl}/upload/${d.image}`} width="50" height="50" /> 
+      accessor: (d) => {
+        return <img src={`${backendUrl}/upload/${d.image}`} width="50" height="50" />;
       },
       width: 50,
-      dataKey: 'brand',
+      dataKey: "brand",
     },
     {
       Header: direction == "ltr" ? "Actions" : "إعدادات",
-      accessor: (d) => 
-      { 
-        return <>  <MDButton onClick={() => showSlider(d)} style={{ margin: '0 5px 0 5px', backgroundColor: "lightblue" }}>
-                        {direction == 'rtl' ? "تعديل" : "Edit"}
-                  </MDButton>  
-                  <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
-                    {direction == 'rtl' ? "حذف" : "Delete"}
-                  </MDButton> </>
+      accessor: (d) => {
+        return (
+          <>
+            {" "}
+            <MDButton
+              onClick={() => showSlider(d)}
+              style={{ margin: "0 5px 0 5px", backgroundColor: "lightblue" }}
+            >
+              {direction == "rtl" ? "تعديل" : "Edit"}
+            </MDButton>
+            <MDButton
+              onClick={() => handleClickOpen(1, d.id)}
+              color="warning"
+              style={{ backgroundColor: "red" }}
+            >
+              {direction == "rtl" ? "حذف" : "Delete"}
+            </MDButton>{" "}
+          </>
+        );
       },
       width: 50,
-    }
+    },
   ];
   const getSliders = () => {
-    SlidersService.getAllSliders()
-    .then(resp => {
-      console.log(resp)
+    SlidersService.getAllSliders().then((resp) => {
+      console.log(resp);
       setFiltered(resp.data);
       setSliders(resp.data);
-    })
-  }
+    });
+  };
   useEffect(() => {
-    getSliders()
-  }, [])
+    getSliders();
+  }, []);
   // Damage Dialog
   const [open, setOpen] = React.useState(false);
   const [del, setDelete] = React.useState(0);
   const [id, setId] = React.useState(0);
   const [message, setMessage] = React.useState("");
   const handleClickOpen = (number, id) => {
-    setDelete(number)
-    setId(id)
-    number == 0 ? setMessage("هل تريد إتلاف هذا العنصر؟") : setMessage("هل تريد حذف هذا العنصر؟")
+    setDelete(number);
+    setId(id);
+    number == 0 ? setMessage("هل تريد إتلاف هذا العنصر؟") : setMessage("هل تريد حذف هذا العنصر؟");
     setOpen(true);
   };
 
@@ -138,49 +167,48 @@ function Sliders() {
     setOpen(false);
   };
   const handleAction = () => {
-    if(del == 0) {
+    if (del == 0) {
       SlidersService.damageSlider(id)
-      .then(resp => {
-        toast.success(resp.message)
-        getSliders()
-        setOpen(false)
-      })
-      .catch(error => {
-        toast.error(error?.response?.data?.message)
-      })
-    }
-    else {
+        .then((resp) => {
+          toast.success(resp.message);
+          getSliders();
+          setOpen(false);
+        })
+        .catch((error) => {
+          toast.error(error?.response?.data?.message);
+        });
+    } else {
       SlidersService.deleteSlider(id)
-      .then(resp => {
-        toast.success("Slider deleted succesfully")
-        getSliders()
-        setOpen(false)
-      })
-      .catch(error => {
-        toast.error(error?.response?.data?.message)
-      })
+        .then((resp) => {
+          toast.success("Slider deleted succesfully");
+          getSliders();
+          setOpen(false);
+        })
+        .catch((error) => {
+          toast.error(error?.response?.data?.message);
+        });
     }
-  }
+  };
   const DamageDialog = (props) => {
-    return <Dialog
+    return (
+      <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          { message }
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{message}</DialogTitle>
         <DialogActions>
-          <MDButton  color="primary" onClick={handleAction} autoFocus>
-          { direction == "ltr" ? "Yes" : "نعم" }
+          <MDButton color="primary" onClick={handleAction} autoFocus>
+            {direction == "ltr" ? "Yes" : "نعم"}
           </MDButton>
           <MDButton color="red" onClick={handleClose}>
-          { direction == "ltr" ? "No" : "لا" }
+            {direction == "ltr" ? "No" : "لا"}
           </MDButton>
         </DialogActions>
       </Dialog>
-  }
+    );
+  };
 
   // custom pagination
 
@@ -188,37 +216,31 @@ function Sliders() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleChangePage = (
-    event,
-    newPage,
-  ) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event,
-  ) => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
   const [search, setSearch] = useState();
   const onSearchChange = useAsyncDebounce((value) => {
-    setSearch(value)
-    if(!!value)
-    {
-      let _searched = products.filter(e => e.en_name.toLowerCase().includes(value) 
-      || e.ar_name.toLowerCase().includes(value)
-      || e.brand.toLowerCase().includes(value)
-      || e.unit_price.toString().toLowerCase().includes(value)
-      || e.entity.toString().toLowerCase().includes(value)
-      || e.selling_price.toString().toLowerCase().includes(value));
-      setFiltered(_searched)
-    }
-    else 
-    setFiltered(products)
+    setSearch(value);
+    if (!!value) {
+      let _searched = products.filter(
+        (e) =>
+          e.en_name.toLowerCase().includes(value) ||
+          e.ar_name.toLowerCase().includes(value) ||
+          e.brand.toLowerCase().includes(value) ||
+          e.unit_price.toString().toLowerCase().includes(value) ||
+          e.entity.toString().toLowerCase().includes(value) ||
+          e.selling_price.toString().toLowerCase().includes(value)
+      );
+      setFiltered(_searched);
+    } else setFiltered(products);
   }, 100);
   //
   const [show, setShow] = useState(false);
@@ -228,74 +250,83 @@ function Sliders() {
     setShow(true);
     setSlider(d);
     setCreate(false);
-  }
+  };
   const addNew = () => {
     setCreate(true);
     setShow(true);
-  } 
+  };
   const back = () => {
-    setCreate(false)
-    setShow(false)
-    setSlider(null)
-  }
+    setCreate(false);
+    setShow(false);
+    setSlider(null);
+  };
   return (
     <DashboardLayout>
-      {
-        !show && <> <DashboardNavbar name={direction == 'rtl' ? "الصور المنزلقة" : "Sliders"} />
-        <MDButton onClick={() => addNew()} color="primary">
-        {direction == 'rtl' ? "إضافة صورة منزلقة" : "Create Slider"}
-        </MDButton>
-        <MDInput
-          style={{ marginTop: "1em" }}
-          placeholder={direction == 'rtl' ? "بحث" : "Search"}
-          value={search}
-          size="small"
-          fullWidth
-          onChange={({ currentTarget }) => {
-            onSearchChange(currentTarget.value);
-          }}
-        />
-        <MDBox pt={6} pb={3}>
-          <Grid container spacing={6}>
-            <Grid item xs={12}>
-              <Card>
-                <MDBox
-                  mx={2}
-                  mt={-3}
-                  py={3}
-                  px={2}
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="info"
-                >
-                  <MDTypography variant="h6" color="white">
-                  {direction == 'rtl' ? "جدول الصور المنزلقة " : "Sliders Table"}
-                  </MDTypography>
-                </MDBox>
-                {rows != null && rows.length > 0 &&  
-                 <DataTable
-                    type='sliders'
-                    table={{ columns, rows }}
-                    isSorted={true}
-                    entriesPerPage={true}
-                    showTotalEntries={true}
-                    noEndBorder
-                    canSearch={true}
-                  /> 
-                }
-              </Card>
-            </Grid>
-          </Grid>
-        </MDBox> </>
-      }
-      {
-        show && 
+      {!show && (
         <>
-         <DashboardNavbar name={direction == 'rtl' ? "إضافة أو تعديل صورة منزلقة" : "Create or Edit Slider"} />
-         <CreateSlider direction={direction} isCreate={createNew} slider={_slider} backToPrevious={() => back()} />
+          {" "}
+          <DashboardNavbar name={direction == "rtl" ? "الصور المنزلقة" : "Sliders"} />
+          <MDButton onClick={() => addNew()} color="primary">
+            {direction == "rtl" ? "إضافة صورة منزلقة" : "Create Slider"}
+          </MDButton>
+          <MDInput
+            style={{ marginTop: "1em" }}
+            placeholder={direction == "rtl" ? "بحث" : "Search"}
+            value={search}
+            size="small"
+            fullWidth
+            onChange={({ currentTarget }) => {
+              onSearchChange(currentTarget.value);
+            }}
+          />
+          <MDBox pt={6} pb={3}>
+            <Grid container spacing={6}>
+              <Grid item xs={12}>
+                <Card>
+                  <MDBox
+                    mx={2}
+                    mt={-3}
+                    py={3}
+                    px={2}
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="info"
+                  >
+                    <MDTypography variant="h6" color="white">
+                      {direction == "rtl" ? "جدول الصور المنزلقة " : "Sliders Table"}
+                    </MDTypography>
+                  </MDBox>
+                  {rows != null && rows.length > 0 && (
+                    <DataTable
+                      type="sliders"
+                      table={{ columns, rows }}
+                      isSorted={true}
+                      entriesPerPage={true}
+                      showTotalEntries={true}
+                      noEndBorder
+                      canSearch={true}
+                    />
+                  )}
+                </Card>
+              </Grid>
+            </Grid>
+          </MDBox>{" "}
         </>
-      }
+      )}
+      {show && (
+        <>
+          <DashboardNavbar
+            name={direction == "rtl" ? "إضافة أو تعديل صورة منزلقة" : "Create or Edit Slider"}
+          />
+          <CreateSlider
+            direction={direction}
+            isCreate={createNew}
+            slider={_slider}
+            backToPrevious={() => back()}
+          />
+        </>
+      )}
       <DamageDialog />
     </DashboardLayout>
   );

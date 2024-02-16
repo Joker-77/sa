@@ -11,8 +11,6 @@ import { UsersService } from "services/UsersService";
 
 export const CreateUser = ({ direction, user, isCreate, backToPrevious }) => 
 {
-    console.clear()
-    console.log(user)
     console.log(isCreate)
     const FILE_SIZE = 524288;
     const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png"];

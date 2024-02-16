@@ -6,23 +6,23 @@ class AuthService {
   login(payload) {
     console.log("auth", payload);
     return api
-      .post("/login", payload, {
+      .post("/account/login", payload, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
       .then((response) => {
         if (response && response.data) {
           console.log(response.data);
-          let resp = response.data.data;
-          let user = {
-            user: resp.user,
-            access: resp.token,
-          };
-          TokenService.setcurrentUser(user);
-          console.clear()
-          console.log(user)
-          return user;
+          if (response.data.isOk) {
+            let resp = response.data;
+            let user = {
+              user: resp.user,
+              access: resp.token,
+            };
+            TokenService.setcurrentUser(user);
+            return user;
+          }
         }
       });
   }

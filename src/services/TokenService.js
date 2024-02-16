@@ -20,13 +20,14 @@ class TokenService {
   static setcurrentUser = (currentUser) => {
     console.log("currentUser", JSON.stringify(currentUser));
     localStorage.setItem("coursesToken", JSON.stringify(currentUser?.access));
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    localStorage.setItem("currentUser", JSON.stringify(currentUser?.user));
+    // localStorage.setItem("userDetails", JSON.stringify(state));
   };
 
   static removecurrentUser() {
     localStorage.removeItem("coursesToken");
     localStorage.removeItem("currentUser");
-    localStorage.removeItem("userDetails");
+    // localStorage.removeItem("userDetails");
   }
 }
 

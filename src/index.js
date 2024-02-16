@@ -10,13 +10,13 @@ import { AuthProvider } from "context/Auth";
 import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
-  <BrowserRouter basename="/api/dashboard">
+  <HashRouter>
     <AuthProvider>
       <MaterialUIControllerProvider>
         <ToastContainer autoClose={2000} theme="colored" />
         <App />
       </MaterialUIControllerProvider>
     </AuthProvider>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById("root")
 );

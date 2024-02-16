@@ -50,7 +50,7 @@ export class OrdersService {
     static changeStatus(id, payload) {
         return api.post(`/orders/${id}/change-status`, payload, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "application/json"
             }
         }).then((response) => {
             if (response && response.data) {
