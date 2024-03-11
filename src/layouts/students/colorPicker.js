@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  EditableInput,
-  Hue,
-  Saturation
-} from "react-color/lib/components/common/";
+import { EditableInput, Hue, Saturation } from "react-color/lib/components/common/";
 import { CustomPicker } from "react-color";
 
 const ColorPicker = ({ hsl, hsv, hex, onChange }) => {
@@ -15,7 +11,7 @@ const ColorPicker = ({ hsl, hsv, hex, onChange }) => {
           width: "100px",
           position: "relative",
           float: "left",
-          zIndex: 1000000
+          zIndex: 1000000,
         }}
       >
         <Saturation hsl={hsl} hsv={hsv} onChange={onChange} />
@@ -27,7 +23,7 @@ const ColorPicker = ({ hsl, hsv, hex, onChange }) => {
           width: "10px",
           position: "relative",
           float: "left",
-          zIndex: 1000000
+          zIndex: 1000000,
         }}
       >
         <Hue hsl={hsl} direction="vertical" onChange={onChange} />

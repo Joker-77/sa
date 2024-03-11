@@ -13,17 +13,29 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-import { useMaterialUIController } from "context";
+import {
+  useMaterialUIController,
+  setOpenConfigurator,
+  setTransparentSidenav,
+  setWhiteSidenav,
+  setFixedNavbar,
+  setSidenavColor,
+  setDarkMode,
+  setDirection,
+} from "context";
 import { useEffect, useState } from "react";
-import ProductsService from "services/ProductsService";
+import StudentsService from "services/StudentsService";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
+import { CreateStudent } from "./createStudent";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { toast } from "react-toastify";
 
-function Damaged() {
+function Students() {
   const [products, setProducts] = useState([]);
   const [rows, setFiltered] = useState([]);
   const [controller, dispatch] = useMaterialUIController();
@@ -36,7 +48,6 @@ function Damaged() {
     darkMode,
     direction,
   } = controller;
-  const backendUrl = "https://back.RUSA.shop";
   const columns = [
     {
       Header: direction == "ltr" ? "Id" : "المعرّف",
@@ -135,16 +146,27 @@ function Damaged() {
       accessor: (d) => {
         return (
           <>
+            {" "}
+            <MDButton
+              onClick={() => showProduct(d)}
+              style={{ margin: "0 5px 0 5px", backgroundColor: "lightblue" }}
+            >
+              {direction == "rtl" ? "تعديل" : "Edit"}
+            </MDButton>
             <MDButton
               onClick={() => handleClickOpen(0, d.id)}
               color="warning"
               style={{ margin: "0 5px 0 5px" }}
             >
-              {direction == "rtl" ? "استعادة" : "Restore"}
+              {direction == "rtl" ? "إتلاف" : "Damage"}
             </MDButton>
-            {/* <MDButton  onClick={() => handleClickOpen(1, d.id)} color="warning" style={{ backgroundColor: "red" }}>
-                    {direction == 'rtl' ? "حذف" : "Edit"}
-                  </MDButton> */}
+            <MDButton
+              onClick={() => handleClickOpen(1, d.id)}
+              color="warning"
+              style={{ backgroundColor: "red" }}
+            >
+              {direction == "rtl" ? "حذف" : "Delete"}
+            </MDButton>{" "}
           </>
         );
       },
@@ -152,14 +174,14 @@ function Damaged() {
     },
   ];
   const getProducts = () => {
-    ProductsService.getAllDamagedProducts().then((resp) => {
-      console.log("resp", resp);
-      setFiltered(resp.data);
-      setProducts(resp.data);
+    StudentsService.getAllStudents().then((resp) => {
+      console.log(resp);
+      // setFiltered(resp.data);
+      // setProducts(resp.data);
     });
   };
   useEffect(() => {
-    getProducts();
+    // getProducts();
   }, []);
   // Damage Dialog
   const [open, setOpen] = React.useState(false);
@@ -169,10 +191,7 @@ function Damaged() {
   const handleClickOpen = (number, id) => {
     setDelete(number);
     setId(id);
-    direction == "rtl"
-      ? setMessage("هل تريد استعادة هذا العنصر؟")
-      : setMessage("Are you sure you want to restore this item");
-
+    number == 0 ? setMessage("هل تريد إتلاف هذا العنصر؟") : setMessage("هل تريد حذف هذا العنصر؟");
     setOpen(true);
   };
 
@@ -181,7 +200,7 @@ function Damaged() {
   };
   const handleAction = () => {
     if (del == 0) {
-      ProductsService.restoreProduct(id)
+      ProductsService.damageProduct(id)
         .then((resp) => {
           toast.success(resp.message);
           getProducts();
@@ -256,12 +275,32 @@ function Damaged() {
     } else setFiltered(products);
   }, 100);
   //
+  const [show, setShow] = useState(false);
+  const [createNew, setCreate] = useState(false);
+  const [_product, setProduct] = useState(null);
+  const showProduct = (d) => {
+    setShow(true);
+    setProduct(d);
+    setCreate(false);
+  };
+  const addNew = () => {
+    setCreate(true);
+    setShow(true);
+  };
+  const back = () => {
+    setCreate(false);
+    setShow(false);
+    setProduct(null);
+  };
   return (
     <DashboardLayout>
-      {
+      {!show && (
         <>
           {" "}
-          <DashboardNavbar name={direction == "rtl" ? "المنتجات التالفة" : "Damaged Products"} />
+          <DashboardNavbar name={direction == "rtl" ? "الطلاب" : "Students"} />
+          <MDButton onClick={() => addNew()} color="primary">
+            {direction == "rtl" ? "إضافة طالب" : "Create Student"}
+          </MDButton>
           <MDInput
             style={{ marginTop: "1em" }}
             placeholder={direction == "rtl" ? "بحث" : "Search"}
@@ -287,7 +326,7 @@ function Damaged() {
                     coloredShadow="info"
                   >
                     <MDTypography variant="h6" color="white">
-                      {direction == "rtl" ? "جدول المنتجات التالفة" : "Damaged Products Table"}
+                      {direction == "rtl" ? "جدول الطلاب" : "Students Table"}
                     </MDTypography>
                   </MDBox>
                   {rows != null && rows.length > 0 && (
@@ -306,10 +345,23 @@ function Damaged() {
             </Grid>
           </MDBox>{" "}
         </>
-      }
+      )}
+      {show && (
+        <>
+          <DashboardNavbar
+            name={direction == "rtl" ? "إضافة أو تعديل طالب" : "Create or Edit Product"}
+          />
+          <CreateStudent
+            direction={direction}
+            isCreate={createNew}
+            product={_product}
+            backToPrevious={() => back()}
+          />
+        </>
+      )}
       <DamageDialog />
     </DashboardLayout>
   );
 }
 
-export default Damaged;
+export default Students;

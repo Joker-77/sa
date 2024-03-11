@@ -7,12 +7,9 @@ import MDButton from "components/MDButton";
 import CategoriesService from "services/CategoriesService";
 import CouponsService from "services/CouponsService";
 import { toast } from "react-toastify";
-import { ProductsService } from "services/ProductsService";
+import { StudentsService } from "services/StudentsService";
 import { StoresService } from "services/StoresService";
-export const CreateProduct = ({ direction, product, isCreate, backToPrevious }) => {
-  console.clear();
-  console.log(product);
-  console.log(isCreate);
+export const CreateStudent = ({ direction, product, isCreate, backToPrevious }) => {
   const FILE_SIZE = 524288;
   const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png"];
   // const phoneNumberRegEx = /^[0-1]{2}[0-9]{9}/;
@@ -100,8 +97,6 @@ export const CreateProduct = ({ direction, product, isCreate, backToPrevious }) 
       toast.error("Image is required");
       return;
     }
-    console.log(values);
-
     var data = new FormData();
     Object.keys(values).forEach((e) => {
       data.append(e, values[e]);
@@ -110,13 +105,13 @@ export const CreateProduct = ({ direction, product, isCreate, backToPrevious }) 
     if (selectedFile) data.append("image", selectedFile);
     if (selectedFile1) data.append("image_2", selectedFile1);
     if (isCreate) {
-      ProductsService.addProduct(data)
+      StudentsService.addProduct(data)
         .then((resp) => {
           toast.success(resp.message);
         })
         .catch((error) => toast.error("An error"));
     } else {
-      ProductsService.updateProduct(product.id, data)
+      StudentsService.updateProduct(product.id, data)
         .then((resp) => {
           toast.success(resp.message);
         })

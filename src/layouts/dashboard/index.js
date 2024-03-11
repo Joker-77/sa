@@ -32,7 +32,7 @@ import {
   setDarkMode,
   setDirection,
 } from "context";
-import ProductsService from "services/ProductsService";
+import StudentsService from "services/StudentsService";
 import { Card } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import { useAuthDispatch } from "context/Auth";
